@@ -60,11 +60,12 @@ jobs:
             ghcr.io/mailcow/dockerapi:2.11 \
             ghcr.io/mailcow/olefy:1.14 \
             mcuadros/ofelia:latest -o bundle/mailcow-bundle.tar
+          split -b 1900m bundle/mailcow-bundle.tar bundle/mailcow-bundle.tar.part.
 
       - name: Upload as Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          files: bundle/mailcow-bundle.tar
+          files: bundle/mailcow-bundle.tar.part.*
           tag_name: mailcow-bundle-v1  # 可以任意命名，只要格式正确
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
