@@ -6,42 +6,23 @@ on:
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout empty repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Docker
         uses: docker-practice/actions-setup-docker@master
 
+      - name: Check Docker version
+        run: docker --version
+
+      # - name: show default daemon json content
+      #   run: cat /etc/docker/daemon.json
+
       - name: Pull Mailcow images
         run: |
           docker pull ghcr.io/mailcow/unbound:1.24
-          docker pull ghcr.io/mailcow/redis:7.0
-          docker pull ghcr.io/mailcow/sogo-mailcow:latest
-          docker pull redis:7.4.2-alpine
           docker pull mariadb:10.11
-          docker pull memcached:alpine
-          docker pull mcuadros/ofelia:latest
-          docker pull robbertkl/ipv6nat:latest
-
-      - name: Save images to archive
-        run: |
-          docker save \
-            ghcr.io/mailcow/unbound:1.24 \
-            ghcr.io/mailcow/redis:7.0 \
-            ghcr.io/mailcow/sogo-mailcow:latest \
-            redis:7.4.2-alpine \
-            mariadb:10.11 \
-            memcached:alpine \
-            mcuadros/ofelia:latest \
-            robbertkl/ipv6nat:latest \
-            -o mailcow-images.tar
-
-      - name: Upload as release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: mailcow-bundle
-          name: Mailcow镜像打包
-          files: mailcow-images.tar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          docker pull redis:7.4.2-alpine
+          docker pull ghcr.io/mailcow/clamd:
