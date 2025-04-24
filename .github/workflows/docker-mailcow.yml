@@ -8,21 +8,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout empty repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker
-        uses: docker-practice/actions-setup-docker@master
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
 
-      - name: Check Docker version
+      - name: Docker version check
         run: docker --version
 
-      # - name: show default daemon json content
-      #   run: cat /etc/docker/daemon.json
+      - name: Login to GHCR (optional, skip if public)
+        run: echo "Skip login step if not needed"
 
-      - name: Pull Mailcow images
+      - name: Pull Mailcow Images
         run: |
           docker pull ghcr.io/mailcow/unbound:1.24
           docker pull mariadb:10.11
           docker pull redis:7.4.2-alpine
-          docker pull ghcr.io/mailcow/clamd:
+          docker pull ghcr.io/mailcow/clamd:1.70
+          docker pull ghcr.io/mailcow/rspamd:2.1
+          docker pull ghcr.io/mailcow/phpfpm:1.93
+          docker pull ghcr.io/mailcow/sogo:1.133
+          docker pull ghcr.io/mailcow/dovecot:2.33
+          docker pull ghcr.io/mailcow/postfix:1.80
+          docker pull ghcr.io/mailcow/nginx:1.03
+          docker pull ghcr.io/mailcow/acme:1.92
+          docker pull ghcr.io/mailcow/netfilter:1.61
+          docker pull ghcr.io/mailcow/watchdog:2.07
+          docker pull ghcr.io/mailcow/dockerapi:2.11
+          docker pull ghcr.io/mailcow/olefy:1.14
+          docker pull mcuadros/ofelia:latest
+          docker pull robbertkl/ipv6nat
