@@ -60,9 +60,9 @@ jobs:
 
       - name: Upload as Release Asset
         uses: softprops/action-gh-release@v1
-  with:
-    files: bundle/mailcow-bundle.tar
-    tag_name: mailcow-bundle-v1  # 可以任意命名，只要格式正确
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: bundle/mailcow-bundle.tar
+          tag_name: mailcow-bundle-v1  # 可以任意命名，只要格式正确
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
