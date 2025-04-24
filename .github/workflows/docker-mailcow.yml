@@ -56,9 +56,7 @@ jobs:
             ghcr.io/mailcow/watchdog:2.07 \
             ghcr.io/mailcow/dockerapi:2.11 \
             ghcr.io/mailcow/olefy:1.14 \
-           
-
-            -o bundle/mailcow-bundle.tar
+            mcuadros/ofelia:latest -o bundle/mailcow-bundle.tar
 
       - name: Upload as Release Asset
         uses: softprops/action-gh-release@v1
