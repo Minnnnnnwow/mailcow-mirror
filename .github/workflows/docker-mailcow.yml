@@ -6,19 +6,15 @@ on:
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
+        uses: docker-practice/actions-setup-docker@master
 
       - name: Docker version check
         run: docker --version
-
-      - name: Login to GHCR (optional, skip if public)
-        run: echo "Skip login step if not needed"
 
       - name: Pull Mailcow Images
         run: |
@@ -31,6 +27,7 @@ jobs:
           docker pull ghcr.io/mailcow/sogo:1.133
           docker pull ghcr.io/mailcow/dovecot:2.33
           docker pull ghcr.io/mailcow/postfix:1.80
+          docker pull memcached:alpine
           docker pull ghcr.io/mailcow/nginx:1.03
           docker pull ghcr.io/mailcow/acme:1.92
           docker pull ghcr.io/mailcow/netfilter:1.61
@@ -39,3 +36,33 @@ jobs:
           docker pull ghcr.io/mailcow/olefy:1.14
           docker pull mcuadros/ofelia:latest
           docker pull robbertkl/ipv6nat
+
+      - name: Save images to archive
+        run: |
+          mkdir -p archive
+          docker save \
+            ghcr.io/mailcow/unbound:1.24 \
+            mariadb:10.11 \
+            redis:7.4.2-alpine \
+            ghcr.io/mailcow/clamd:1.70 \
+            ghcr.io/mailcow/rspamd:2.1 \
+            ghcr.io/mailcow/phpfpm:1.93 \
+            ghcr.io/mailcow/sogo:1.133 \
+            ghcr.io/mailcow/dovecot:2.33 \
+            ghcr.io/mailcow/postfix:1.80 \
+            memcached:alpine \
+            ghcr.io/mailcow/nginx:1.03 \
+            ghcr.io/mailcow/acme:1.92 \
+            ghcr.io/mailcow/netfilter:1.61 \
+            ghcr.io/mailcow/watchdog:2.07 \
+            ghcr.io/mailcow/dockerapi:2.11 \
+            ghcr.io/mailcow/olefy:1.14 \
+            mcuadros/ofelia:latest \
+            robbertkl/ipv6nat \
+            -o archive/mailcow_bundle.tar
+
+      - name: Upload Docker image archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: mailcow-bundle
+          path: archive/mailcow_bundle.tar
