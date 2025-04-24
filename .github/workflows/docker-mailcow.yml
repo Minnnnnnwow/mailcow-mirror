@@ -6,12 +6,13 @@ on:
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Docker
-        uses: docker-practice/actions-setup-docker@master
+        uses: docker/setup-buildx-action@v3
 
       - name: Docker version check
         run: docker --version
@@ -27,7 +28,6 @@ jobs:
           docker pull ghcr.io/mailcow/sogo:1.133
           docker pull ghcr.io/mailcow/dovecot:2.33
           docker pull ghcr.io/mailcow/postfix:1.80
-          docker pull memcached:alpine
           docker pull ghcr.io/mailcow/nginx:1.03
           docker pull ghcr.io/mailcow/acme:1.92
           docker pull ghcr.io/mailcow/netfilter:1.61
@@ -35,11 +35,11 @@ jobs:
           docker pull ghcr.io/mailcow/dockerapi:2.11
           docker pull ghcr.io/mailcow/olefy:1.14
           docker pull mcuadros/ofelia:latest
-          docker pull robbertkl/ipv6nat
+          docker pull robbertkjl/ipv6nat:latest
 
       - name: Save images to archive
         run: |
-          mkdir -p archive
+          mkdir -p bundle
           docker save \
             ghcr.io/mailcow/unbound:1.24 \
             mariadb:10.11 \
@@ -50,7 +50,6 @@ jobs:
             ghcr.io/mailcow/sogo:1.133 \
             ghcr.io/mailcow/dovecot:2.33 \
             ghcr.io/mailcow/postfix:1.80 \
-            memcached:alpine \
             ghcr.io/mailcow/nginx:1.03 \
             ghcr.io/mailcow/acme:1.92 \
             ghcr.io/mailcow/netfilter:1.61 \
@@ -58,11 +57,12 @@ jobs:
             ghcr.io/mailcow/dockerapi:2.11 \
             ghcr.io/mailcow/olefy:1.14 \
             mcuadros/ofelia:latest \
-            robbertkl/ipv6nat \
-            -o archive/mailcow_bundle.tar
+            robbertkjl/ipv6nat:latest \
+            -o bundle/mailcow-bundle.tar
 
-      - name: Upload Docker image archive
-        uses: actions/upload-artifact@v4
+      - name: Upload as Release Asset
+        uses: softprops/action-gh-release@v1
         with:
-          name: mailcow-bundle
-          path: archive/mailcow_bundle.tar
+          files: bundle/mailcow-bundle.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
