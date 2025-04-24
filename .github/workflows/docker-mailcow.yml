@@ -35,7 +35,7 @@ jobs:
           docker pull ghcr.io/mailcow/dockerapi:2.11
           docker pull ghcr.io/mailcow/olefy:1.14
           docker pull mcuadros/ofelia:latest
-          docker pull robbertkjl/ipv6nat:latest
+          docker pull robbertkl/ipv6nat:latest
 
       - name: Save images to archive
         run: |
