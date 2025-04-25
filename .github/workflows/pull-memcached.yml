@@ -1,0 +1,26 @@
+name: Pull & Package memcached:alpine
+on:
+  workflow_dispatch:   # 手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Pull memcached:alpine
+      run: docker pull memcached:alpine
+
+    - name: Save to tar archive
+      run: |
+        mkdir -p bundle
+        docker save memcached:alpine \
+          -o bundle/memcached-alpine.tar
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: memcached-alpine
+        path: bundle/memcached-alpine.tar
